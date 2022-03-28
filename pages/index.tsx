@@ -1,5 +1,5 @@
-import Head from 'next/head';
-import { Button, Card } from 'antd';
+import Head from "next/head";
+import { Button, Card } from "antd";
 
 export default function Home() {
   return (

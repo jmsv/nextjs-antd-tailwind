@@ -1,19 +1,24 @@
-const withLess = require("@zeit/next-less");
-const withSass = require("@zeit/next-sass");
-const withCSS = require("@zeit/next-css");
+const fs = require("fs");
+const path = require("path");
+const withLess = require("next-with-less");
+const lessToJS = require("less-vars-to-js");
 
-module.exports = {
-  target: "serverless",
+const themeVariables = lessToJS(
+  fs.readFileSync(path.resolve(__dirname, "./styles/antd.less"), "utf8")
+);
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
   ...withLess({
-    ...withSass({
-      lessLoaderOptions: {
+    lessLoaderOptions: {
+      lessOptions: {
         javascriptEnabled: true,
+        modifyVars: themeVariables,
+        localIdentName: "[path]___[local]___[hash:base64:5]",
       },
-      ...withCSS({
-        cssLoaderOptions: {
-          url: false,
-        },
-      }),
-    }),
+    },
   }),
 };
+
+module.exports = nextConfig;
